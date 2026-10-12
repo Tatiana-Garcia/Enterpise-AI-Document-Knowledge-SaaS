@@ -1,0 +1,87 @@
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+    "name": "Administrador Principal",
+    "email": "admin@enterprise.com",
+    "password": "miPasswordSeguro123",
+    "role": "Admin"
+}
+
+###
+
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "admin@enterprise.com",
+    "password": "miPasswordSeguro123"
+}
+
+### 3. Probar Ruta Protegida (Reemplaza TOKEN_AQUI por el token real)
+GET http://localhost:3000/api/admin/dashboard
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBlbnRlcnByaXNlLmNvbSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc5MTczNTg0NSwiZXhwIjoxNzkxNzY0NjQ1fQ.GTrOKIKBU4HjilgNdFmHH1iKgfKHgTw54x5a2zQeWLI
+### 4. Subir un Documento Empresarial (Requiere Rol Admin o Editor)
+POST http://localhost:3000/api/documents
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBlbnRlcnByaXNlLmNvbSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc5MTczNTg0NSwiZXhwIjoxNzkxNzY0NjQ1fQ.GTrOKIKBU4HjilgNdFmHH1iKgfKHgTw54x5a2zQeWLI
+Content-Type: application/json
+
+{
+    "title": "Política de Resolución de Incidentes TI 2026",
+    "content": "Los incidentes de severidad alta (Sev-1) deben ser atendidos en un SLA máximo de 15 minutos. El equipo de infraestructura debe notificar por Slack y escalar al líder técnico en turno."
+}
+
+### 5. Búsqueda Semántica de Documentos (RAG)
+POST http://localhost:3000/api/documents/search
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBlbnRlcnByaXNlLmNvbSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc5MTczNTg0NSwiZXhwIjoxNzkxNzY0NjQ1fQ.GTrOKIKBU4HjilgNdFmHH1iKgfKHgTw54x5a2zQeWLI
+Content-Type: application/json
+
+{
+    "query_text": "¿Cuál es el protocolo de atención para incidentes urgentes?"
+}
+
+
+### 6. Consulta de Soporte Inteligente (RAG con LLM)
+POST http://localhost:3000/api/support/ask
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBlbnRlcnByaXNlLmNvbSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc5MTczNTg0NSwiZXhwIjoxNzkxNzY0NjQ1fQ.GTrOKIKBU4HjilgNdFmHH1iKgfKHgTw54x5a2zQeWLI
+Content-Type: application/json
+
+{
+    "question": "¿Qué debo hacer si ocurre un incidente de severidad alta en la infraestructura?"
+}
+
+
+### 7. Generar URL Firmada para AWS S3
+POST http://localhost:3000/api/documents/presigned-url
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBlbnRlcnByaXNlLmNvbSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc5MTczNTg0NSwiZXhwIjoxNzkxNzY0NjQ1fQ.GTrOKIKBU4HjilgNdFmHH1iKgfKHgTw54x5a2zQeWLI
+Content-Type: application/json
+
+{
+    "fileName": "manual-seguridad-2026.pdf",
+    "fileType": "application/pdf"
+}
+
+### 7.5. Subir el PDF real a S3 usando la URL Firmada
+PUT https://enterprise-ai-docs-storage-2026.s3.us-east-2.amazonaws.com/documents/1791740861870-manual-seguridad-2026.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAQT3BPO7EGZXAVXFQ%2F20261011%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20261011T174741Z&X-Amz-Expires=300&X-Amz-Signature=ca98a4d7e9b2bb84438da8685f18ce181e2e9569c01e50b763ba0704941bca36&X-Amz-SignedHeaders=host&x-amz-checksum-crc32=AAAAAA%3D%3D&x-amz-sdk-checksum-algorithm=CRC32&x-id=PutObject
+
+< ./manual-seguridad-2026.pdf
+
+
+### 8. Procesar y Vectorizar PDF guardado en AWS S3
+POST http://localhost:3000/api/documents/process-pdf
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBlbnRlcnByaXNlLmNvbSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc5MTczNTg0NSwiZXhwIjoxNzkxNzY0NjQ1fQ.GTrOKIKBU4HjilgNdFmHH1iKgfKHgTw54x5a2zQeWLI
+Content-Type: application/json
+
+{
+    "fileKey": "documents/1791740861870-manual-seguridad-2026.pdf",
+    "title": "Manual de Seguridad de la Información 2026"
+}
+
+### 9. Preguntar al sistema sobre los documentos (RAG con Llama 3)
+POST http://localhost:3000/api/documents/ask
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBlbnRlcnByaXNlLmNvbSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc5MTczNTg0NSwiZXhwIjoxNzkxNzY0NjQ1fQ.GTrOKIKBU4HjilgNdFmHH1iKgfKHgTw54x5a2zQeWLI
+Content-Type: application/json
+
+{
+    "question": "¿Cuáles son los requisitos o pasos?"
+}
